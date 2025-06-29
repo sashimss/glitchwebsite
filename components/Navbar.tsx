@@ -1,10 +1,10 @@
 "use client"
 import * as React from "react";
-import { Button } from "@/components/ui/button"; // Adjust path based on your structure
+import { Button } from "@/components/ui/button";
 import { Search, Menu, Key } from "lucide-react"; // Added Key icon for keypad
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils"; // Adjust path based on your structure
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -19,9 +19,9 @@ export default function Header() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const officeDetails = {
-    address: "Office Address\n123/A, Miranda City\nLilkai Prikano, Dope",
-    phone: "+0999 7876 9653 9\n+(090) 8765 8654 83 85",
-    email: "info@example.mail@hum.com",
+    address: "IIT Hyderabad",
+    phone: "0123456789",
+    email: "glitch@iith.ac.in",
   };
 
   return (

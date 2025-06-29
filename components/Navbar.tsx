@@ -1,21 +1,22 @@
-"use client"
+"use client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Search, Menu, Key } from "lucide-react"; // Added Key icon for keypad
+import { Search, Key } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Pages", href: "/pages" },
+  { name: "About Us", href: "/about" },
+  { name: "Team", href: "/team" },
+  { name: "Insights", href: "/blogs" },
   { name: "Projects", href: "/projects" },
-  { name: "Insights", href: "/insights" },
-  { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
+  const [activeLink, setActiveLink] = React.useState(pathname);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const officeDetails = {
@@ -25,34 +26,47 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full px-6 py-10 bg-background flex items-center justify-between shadow-md relative">
-      {/* Left Navbar */}
-      <nav className="flex items-center space-x-4">
-        {navLinks.map((link) => (
+    <header className="w-full bg-background flex items-center justify-between px-6 py-4 relative">
+      {/* Left Navbar*/}
+      <nav className="flex space-x-4">
+        {navLinks.map((link, index) => (
           <Link
             key={link.href}
             href={link.href}
+            onClick={() => setActiveLink(link.href)}
             className={cn(
-              "text-foreground hover:text-primary transition-colors text-sm sm:text-base",
-              pathname === link.href ? "underline underline-offset-4 text-primary" : ""
+              "text-foreground text-sm sm:text-base transition-colors flex items-center py-1",
+              activeLink === link.href
+                ? "bg-primary text-primary-foreground px-2 rounded-full"
+                : "hover:bg-transparent",
+              {
+                "hover:text-hover-green-1": index === 0,
+                "hover:text-hover-green-2": index === 1,
+                "hover:text-hover-green-3": index === 2,
+                "hover:text-hover-green-4": index === 3,
+                "hover:text-hover-green-5": index === 4,
+              }
             )}
           >
-            {link.name}
+            {link.name} ▼
           </Link>
         ))}
       </nav>
 
-      {/* Centered Logo */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold text-primary flex items-center space-x-2">
-        <span>GLITCH</span>
+      {/* Centered Logo*/}
+      <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
+        <img src="/logo-nobg.png" alt="Glitch Logo" className="h-12 mr-2" />
+        <span className="text-4xl font-bold text-primary">GLITCH</span>
       </div>
 
-      {/* Right Section */}
+      {/* Right Navbar */}
       <div className="flex items-center space-x-6">
         <a href="mailto:glitch@iith.ac.in" className="text-primary text-sm sm:text-base">
           glitch@iith.ac.in
         </a>
-        
+        <button className="text-primary hover:text-foreground">
+          <Search className="h-5 w-5" />
+        </button>
         <button
           className="text-primary hover:text-foreground"
           onClick={() => setIsModalOpen(true)}
@@ -61,21 +75,18 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Modal for Office Details */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-background p-6 rounded-lg shadow-lg text-foreground w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Office Details</h2>
-            <p className="mb-2"><strong>Address:</strong><br />{officeDetails.address}</p>
-            <p className="mb-2"><strong>Phone Number:</strong><br />{officeDetails.phone}</p>
-            <p className="mb-4"><strong>Email Address:</strong><br />{officeDetails.email}</p>
-            <button
-              className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary-foreground hover:text-primary"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Close
-            </button>
-          </div>
+      {isModalOpen && pathname === "/" && (
+        <div className="fixed top-16 right-6 bg-background p-4 rounded-lg shadow-lg text-foreground w-64 z-50 border border-primary">
+          <h2 className="text-lg font-bold mb-2">Office Details</h2>
+          <p className="mb-1 text-sm"><strong>Address:</strong><br />{officeDetails.address}</p>
+          <p className="mb-1 text-sm"><strong>Phone Number:</strong><br />{officeDetails.phone}</p>
+          <p className="mb-2 text-sm"><strong>Email Address:</strong><br />{officeDetails.email}</p>
+          <button
+            className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm hover:bg-primary-foreground hover:text-primary"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Close
+          </button>
         </div>
       )}
     </header>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from "next/link";
+import { FaPlay } from "react-icons/fa";
 
 export default function HomePage() {
   return (
@@ -15,7 +16,10 @@ export default function HomePage() {
         />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center">
           <img src="/logo-nobg.png" alt="Glitch Logo" className="h-16 mr-4" />
-          <span className="text-6xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00, 0 0 30px #00ff00, 0 0 0 #00ff00" }}>
+          <span
+            className="hero layers font glitch movement opacity"
+            data-text="GLITCH"
+          >
             GLITCH
           </span>
         </div>
@@ -41,6 +45,19 @@ export default function HomePage() {
             <img src="/homepage-1.png" alt="Character" className="h-130 relative translate-x-[-20px] translate-y-[30px]" />
           </div>
         </div>
+      </div>
+
+      <div className="w-full h-[90vh] relative overflow-hidden">
+        <img
+          src="/homepage-videoimage.png"
+          alt="Gaming Setup"
+          className="w-full h-full object-cover"
+        />
+        <button
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+        >
+        <FaPlay className="w-8 h-8 text-black" />
+        </button>
       </div>
     </>
   );

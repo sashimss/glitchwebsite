@@ -1,7 +1,7 @@
 // components/project-card.tsx
 import Image from "next/image";
 import Link from "next/link";
-import { Project } from "@/types/project";
+import { Project } from "@/types";
 
 
 export function ProjectCard({ title, year, genre, image, slug }: Project) {

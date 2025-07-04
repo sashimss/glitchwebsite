@@ -6,12 +6,15 @@ import { gsap } from "gsap";
 export interface ChromaItem {
   image: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
+
+
   handle?: string;
   location?: string;
   borderColor?: string;
   gradient?: string;
   url?: string;
+  year?:string;
 }
 
 export interface ChromaGridProps {
@@ -22,6 +25,8 @@ export interface ChromaGridProps {
   fadeOut?: number;
   ease?: string;
 }
+
+
 
 type SetterFn = (v: number | string) => void;
 
@@ -199,6 +204,12 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
               </span>
             )}
             <p className="m-0 text-[0.85rem] opacity-85">{c.subtitle}</p>
+            
+            
+
+              {c.year && (
+    <span className="text-[0.85rem] opacity-85 text-right">{c.year}</span>
+  )}
             {c.location && (
               <span className="text-[0.85rem] opacity-85 text-right">
                 {c.location}

@@ -28,7 +28,8 @@ const chromaItems: ChromaItem[] = projects.map((project) => ({
             <div className="px-6 py-10 max-w-7xl mx-auto">
          
          
-                    <ChromaGrid items={chromaItems} />
+                    <ChromaGrid items={chromaItems} className="gap-6 px-4 py-6"  />
+                    
                 {/* <ChromaGrid/> */}
             </div>
         </>

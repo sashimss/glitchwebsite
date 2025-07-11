@@ -27,7 +27,7 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
 ];
 
     return (
-        <div className="relative w-full h-[320px] md:h-[420px] overflow-hidden text-white">
+        <div className="relative w-full h-[320px] md:h-[600px] overflow-hidden text-white">
             {/* Grid Background */}
             <div className="absolute inset-0 z-0 bg-[url('/images/page-header-bg.png')] bg-cover bg-center opacity-20" />
 

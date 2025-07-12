@@ -6,7 +6,10 @@ export default function Footer() {
   const copyrightText = `© Copyright ${currentYear} by Glitch Club - All rights reserved `;
   const copyrightItems = Array(50).fill(copyrightText);
   return (
-    <footer className="w-full bg-zinc-900 border-t border-zinc-800 mt-12 px-6 py-6 text-sm text-zinc-400">
+    <footer 
+    className="w-full  border-t border-zinc-800  px-6 py-6 text-sm text-zinc-400"
+          style={{ background: "var(--footer-bg)" }}
+    >
       <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row justify-between items-center mb-15">
         <div className="w-full md:w-1/3 mb-4 md:mb-0 text-left">
           <p className="uppercase text-1.5xl font-bold text-zinc-500">Send Mail</p>

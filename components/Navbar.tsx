@@ -27,7 +27,10 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full bg-background flex items-center justify-between px-6 py-12 relative">
+    <header 
+    className="w-full  flex items-center justify-between px-6 py-12 relative"
+          style={{ background: "var(--header-bg)" }}
+    >
       
       <nav className="hidden md:flex space-x-4">
         {navLinks.map((link, index) => (

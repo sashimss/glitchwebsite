@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface ProjectNavProps {
-  prev?: { slug: string; title: string; image: string };
+  prev?: { slug: string; title: string; image: string };git 
   next?: { slug: string; title: string; image: string };
 }
 

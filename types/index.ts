@@ -24,3 +24,26 @@ export interface TeamMember {
     linkedin: string;
   };
 }
+
+
+
+// types/blog.ts
+export interface Blog {
+  id: string;
+  title: string;
+  thumbnail: string;
+  publishDate: string;
+  readTime: string;
+  categories: string[];
+  description: string;
+  slug: string; // URL slug for the blog post
+  markdownFile: string; // Path to the markdown file
+}
+
+// For the individual blog page with parsed markdown
+export interface BlogWithContent extends Blog {
+  content: string; // Parsed markdown content
+  frontmatter?: {
+    [key: string]: any;
+  };
+}

@@ -12,8 +12,11 @@ const chromaItems: ChromaItem[] = projects.map((project) => ({
     title: project.title,
     subtitle: project.genre,
     url: `/projects/${project.slug}`,
-    gradient: "linear-gradient(145deg, #00ff88, #000)", // optional: vary per project
-    borderColor: "#00ff88", // optional: green border (like your image)
+    // gradient: "linear-gradient(145deg, #00ff88, #000)", // optional: vary per project
+    // borderColor: "#00ff88", // optional: green border (like your image)
+
+    gradient : project.gradient || "linear-gradient(145deg, #00ff88, #000)",
+    borderColor: project.borderColor || "#00ff88",
     year: project.year,
   }));
 
@@ -25,12 +28,9 @@ const chromaItems: ChromaItem[] = projects.map((project) => ({
                 title="Projects"
                 imageUrl="/images/cannon.png"
             />
-            <div className="px-6 py-10 max-w-7xl mx-auto">
-         
-         
-                    <ChromaGrid items={chromaItems} className="gap-6 px-4 py-6"  />
+            <div >
+                 <ChromaGrid items={chromaItems} className="py-20"  />
                     
-                {/* <ChromaGrid/> */}
             </div>
         </>
     );

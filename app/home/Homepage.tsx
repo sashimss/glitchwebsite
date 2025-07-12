@@ -5,7 +5,10 @@ import { FaPlay } from "react-icons/fa";
 export default function HomePage() {
   return (
     <>
-      <div className="w-full h-[90vh] bg-gray-100 relative overflow-hidden">
+      <div className="w-full h-[90vh]  relative overflow-hidden"
+      style={{ background: "var(--body-bg-light)" }}
+
+      >
         <video 
           className="w-full h-[90vh] object-cover brightness-65"
           src="/glitch_promo.mp4"
@@ -25,7 +28,11 @@ export default function HomePage() {
         </div>
       </div>
       
-      <div className="w-full h-[90vh] bg-[#0B0F13] relative overflow-hidden flex items-center">
+      <div 
+      className="w-full h-[90vh] relative overflow-hidden flex items-center" 
+      style={{ background: "var(--body-bg-light)" }}
+      
+      >
         <div className="absolute w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center px-4">
           <div className="w-1/2 p-12">
             <h1 className="text-6xl font-bold text-white mb-12">ABOUT US</h1>
@@ -59,6 +66,7 @@ export default function HomePage() {
         <FaPlay className="w-8 h-8 text-black" />
         </button>
       </div>
+    
     </>
   );
 }

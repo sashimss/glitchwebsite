@@ -55,7 +55,11 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
                     <h1 className="text-5xl md:text-6xl font-extrabold tracking-wider uppercase">
                         {title}
                     </h1>
+                    
 
+                    <div className="relative w-120 h-120 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100">
+
+                    </div>
                     <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-visible shrink-0">
                         {/* Green Glow */}
                         <div className="absolute inset-0 rounded-full bg-green-400 opacity-60 blur-2xl scale-125 z-0" />

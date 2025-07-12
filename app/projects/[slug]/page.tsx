@@ -3,12 +3,12 @@
 import React from 'react';
 import PageHeader from "@/components/page-header";
 interface ProjectPageProps {
-  params: {
+  params: Usable<{
     slug: string;
-  };
+  }>;
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+export default function ProjectPage({params} : ProjectPageProps){
   
     const { slug } = React.use(params);
   

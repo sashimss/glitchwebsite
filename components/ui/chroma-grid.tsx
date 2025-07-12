@@ -225,8 +225,8 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
 <div
   className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300 group-hover:opacity-0"
   style={{
-    backdropFilter: "grayscale(1) brightness(0.78)",
-    WebkitBackdropFilter: "grayscale(1) brightness(0.78)",
+    backdropFilter: "grayscale(0.5) brightness(0.9)",
+    WebkitBackdropFilter: "grayscale(0.5) brightness(0.9)",
     background: "rgba(0,0,0,0.001)",
     maskImage:
       "radial-gradient(circle var(--r) at var(--x) var(--y),transparent 0%,transparent 15%,rgba(0,0,0,0.10) 30%,rgba(0,0,0,0.22)45%,rgba(0,0,0,0.35)60%,rgba(0,0,0,0.50)75%,rgba(0,0,0,0.68)88%,white 100%)",
@@ -241,7 +241,7 @@ const ChromaGrid: React.FC<ChromaGridProps> = ({
         ref={fadeRef}
         className="absolute inset-0 pointer-events-none transition-opacity duration-[250ms] z-40"
         style={{
-          backdropFilter: "grayscale(1) brightness(0.78)",
+          backdropFilter: "grayscale(0.5) brightness(0.9)",
           WebkitBackdropFilter: "grayscale(1) brightness(0.78)",
           background: "rgba(0,0,0,0.001)",
           maskImage:

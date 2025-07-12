@@ -9,7 +9,7 @@ interface ProjectNavProps {
 }
 
 const ProjectNav: React.FC<ProjectNavProps> = ({ prev, next }) => (
-  <div className="flex justify-between items-center border-t border-green-500 mt-12 pt-8">
+  <div className="flex justify-between items-center border-t border-green-500 mt-12 pt-8 py-8">
     {prev ? (
       <Link href={`/projects/${prev.slug}`  } className="flex items-center gap-3 group">
          

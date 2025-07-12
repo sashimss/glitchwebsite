@@ -138,3 +138,22 @@ body {
   margin: 0;
   padding: 0;
 }
+
+
+.custom-swiper-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.custom-swiper-pagination .swiper-pagination-bullet {
+  width: 32px;
+  height: 6px;
+  border-radius: 8px;
+  background: #d1d5db Tailwind gray-300;
+  opacity: 1;
+  transition: background 0.3s;
+}
+.custom-swiper-pagination .swiper-pagination-bullet-active {
+  background: #22c55e; /* Tailwind green-500 */
+}

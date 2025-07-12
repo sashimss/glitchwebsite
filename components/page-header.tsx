@@ -17,8 +17,6 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
         .split("/")
         .filter((seg) => seg !== "");
 
-        console.log(segments)
-
   const breadcrumbs = [
   { label: "Home", href: "/" },
   ...segments.map((seg, idx) => {
@@ -29,15 +27,15 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
 ];
 
     return (
-        <div className="relative w-full h-[320px] md:h-[600px] overflow-hidden text-white">
+        <div className="relative w-full h-[320px] md:h-[650px] overflow-hidden text-white">
             {/* Grid Background */}
             <div className="absolute inset-0 z-0 bg-[url('/images/page-header-bg.png')] bg-cover bg-center opacity-20" />
-
+            <div className="absolute inset-0 z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] opacity-50" />
             {/* Optional dark overlay */}
             <div className="absolute inset-0 bg-black/50 z-0" />
 
             {/* Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center gap-4">
+            <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center gap-2">
                 {/* Breadcrumbs */}
                 <div className="text-sm text-neutral-300 flex items-center gap-2 flex-wrap">
                     {breadcrumbs.map((crumb, idx) => (
@@ -57,25 +55,12 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
                     <h1 className="text-5xl md:text-6xl font-extrabold tracking-wider uppercase">
                         {title}
                     </h1>
-                    
 
-                    <div className="relative w-120 h-120 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100">
-
-                    </div>
-                    <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-visible shrink-0">
-                        {/* Green Glow */}
-                        <div className="absolute inset-0 rounded-full bg-green-400 opacity-60 blur-2xl scale-125 z-0" />
-
-                        {/* Image */}
-                        <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-green-400 bg-black/20 backdrop-blur z-10">
-                            <Image
-                                src={imageUrl}
-                                alt={`${title} image`}
-                                width={144}
-                                height={144}
-                                className="object-contain p-2"
-                            />
+                    <div className="relative w-90 h-90 md:w-95 md:h-95 rounded-full overflow-visible shrink-0">
+                        <div className="absolute w-full h-full flex justify-end">
+                        <div className="relative w-90 h-90 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100"></div>
                         </div>
+                        <img src={imageUrl} alt="Character" className="h-110 relative translate-x-[20px] translate-y-[-25px]" />
                     </div>
                 </div>
             </div>

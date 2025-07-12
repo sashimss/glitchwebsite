@@ -5,7 +5,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 import { blogs } from '@/data/blogs';
-import { Blog, BlogWithContent } from '@/types/';
+import { Blog, BlogWithContent } from '@/types';
 
 const postsDirectory = path.join(process.cwd(), 'content/blogs');
 
@@ -45,4 +45,37 @@ export function getAllBlogSlugs(): string[] {
   return blogs.map(blog => blog.slug);
 }
 
-export function getB
+export function getBlogBySlug(slug: string): Blog | null {
+  return blogs.find(blog => blog.slug === slug) || null;
+}
+
+export function getAllBlogs(): Blog[] {
+  return blogs;
+}
+
+export function getBlogsByCategory(category: string): Blog[] {
+  return blogs.filter(blog => 
+    blog.categories.some(cat => cat.toLowerCase() === category.toLowerCase())
+  );
+}
+
+export function getPaginatedBlogs(page: number, limit: number = 6): {
+  blogs: Blog[];
+  totalPages: number;
+  currentPage: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+} {
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedBlogs = blogs.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(blogs.length / limit);
+
+  return {
+    blogs: paginatedBlogs,
+    totalPages,
+    currentPage: page,
+    hasNext: page < totalPages,
+    hasPrev: page > 1,
+  };
+}

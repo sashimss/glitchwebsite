@@ -18,7 +18,7 @@ const BlogCard: React.FC<{ blog: Blog }> = ({ blog }) => {
   const [day, month] = blog.publishDate.split(" ");
 
   return (
-    <Link href={`/blog/${blog.slug}`} className="block group">
+    <Link href={`/blogs/${blog.slug}`} className="block group">
       <div className="cursor-pointer shadow-none  max-h-max">
         {/* Date Badge - Protruding Top Left */}
         <div className="relative">

@@ -17,6 +17,8 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
         .split("/")
         .filter((seg) => seg !== "");
 
+        console.log(segments)
+
   const breadcrumbs = [
   { label: "Home", href: "/" },
   ...segments.map((seg, idx) => {

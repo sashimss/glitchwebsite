@@ -57,6 +57,17 @@ export default function Header() {
         ))}
       </nav>
 
+      <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center justify-start md:justify-center">
+        <img src="/logo-nobg.png" alt="Glitch Logo" className="h-12 mr-2" />
+        <span className="text-4xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00, 0 0 30px #00ff00, 0 0 0 #00ff00" }}>GLITCH</span>
+      </div>
+
+      <div className="md:hidden">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-primary hover:text-foreground">
+          <Menu className="h-6 w-6" />
+        </button>
+      </div>
+      
       {/* Dropdown Menu for Mobile */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-background p-4 shadow-lg z-50">
@@ -85,17 +96,7 @@ export default function Header() {
         </div>
       )}
 
-      <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center justify-start md:justify-center">
-        <img src="/logo-nobg.png" alt="Glitch Logo" className="h-12 mr-2" />
-        <span className="text-4xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00, 0 0 30px #00ff00, 0 0 0 #00ff00" }}>GLITCH</span>
-      </div>
 
-      <div className="md:hidden">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-primary hover:text-foreground">
-          <Menu className="h-6 w-6" />
-        </button>
-      </div>
-      
       {/* Right Navbar */}
       <div className="hidden sm:flex items-center space-x-6">
         <a href="mailto:glitch@iith.ac.in" className="text-primary text-sm sm:text-base">
@@ -109,7 +110,7 @@ export default function Header() {
         </button>
       </div>
 
-      {isModalOpen && pathname === "/" && (
+      {isModalOpen && (pathname=="/" || pathname=="/about" ||  pathname=="/team" || pathname=="/blogs" || pathname=="/projects")&&(
         <div className="fixed top-16 right-6 bg-background p-4 rounded-lg shadow-lg text-foreground w-64 z-50 border border-primary">
           <h2 className="text-lg font-bold mb-2">Office Details</h2>
           <p className="mb-1 text-sm"><strong>Address:</strong><br />{officeDetails.address}</p>

@@ -24,7 +24,7 @@ export default function TeamCard({ name, slug, image, tag }: TeamCardProps) {
       href={`/team/${slug}`}
       className="group block overflow-hidden rounded-xl perspective"
     >
-      <div className="relative w-full h-[500px] rounded-xl transform-style preserve-3d transition-transform duration-500 group-hover:rotate-[2deg] group-hover:scale-105 hovercard">
+      <div className="relative w-full h-[400px] sm:h-[500px] rounded-xl transform-style preserve-3d transition-transform duration-500 group-hover:rotate-[2deg] group-hover:scale-105 hovercard">
         {/* Image */}
         <Image
           src={image}

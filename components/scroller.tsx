@@ -35,7 +35,7 @@ export default function TimelineProgress() {
   return (
     <div
       ref={progressRef}
-      className="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-700 z-0"
+      className="hidden sm:block absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-700 z-0"
     >
       <div
         className="bg-green-400 w-full transition-all duration-150 ease-linear origin-top"

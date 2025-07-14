@@ -35,7 +35,7 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
             <div className="absolute inset-0 bg-black/50 z-0" />
 
             {/* Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center gap-2">
+            <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center gap-6">
                 {/* Breadcrumbs */}
                 <div className="text-sm text-neutral-300 flex items-center gap-2 flex-wrap">
                     {breadcrumbs.map((crumb, idx) => (
@@ -51,18 +51,19 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
                
                
                 {/* Title + Image in Row */}
-                <div className="flex items-center justify-between flex-wrap gap-6">
-                    <h1 className="text-5xl md:text-6xl font-extrabold tracking-wider uppercase">
-                        {title}
-                    </h1>
+                <div className="flex flex-col sm:flex-row items-center justify-between flex-wrap gap-6">
+                <h1 className="text-5xl md:text-6xl font-extrabold tracking-wider uppercase text-center sm:text-left">
+                    {title}
+                </h1>
 
-                    <div className="relative w-90 h-90 md:w-95 md:h-95 rounded-full overflow-visible shrink-0">
-                        <div className="absolute w-full h-full flex justify-end">
-                        <div className="relative w-90 h-90 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100"></div>
-                        </div>
-                        <img src={imageUrl} alt="Character" className="h-110 relative translate-x-[20px] translate-y-[-25px]" />
+                <div className="hidden sm:block relative w-90 h-90 md:w-95 md:h-95 rounded-full overflow-visible shrink-0">
+                    <div className="absolute w-full h-full flex justify-end">
+                    <div className="relative w-90 h-90 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100"></div>
                     </div>
+                    <img src={imageUrl} alt="Character" className="h-110 relative translate-x-[20px] translate-y-[-25px]" />
                 </div>
+                </div>
+
             </div>
         </div>
     );

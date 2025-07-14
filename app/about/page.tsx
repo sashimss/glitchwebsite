@@ -2,6 +2,7 @@
 import PageHeader from "@/components/page-header";
 import RotatingCircle from "@/components/rotator";
 import TimelineProgress from "@/components/scroller";
+import ScrollFloat from "@/components/ScrollFloat";
 
 export default function AboutPage() {
   return (
@@ -55,7 +56,18 @@ export default function AboutPage() {
 
       <section className="relative bg-gray-950 text-white py-24 px-8">
         <div className="max-w-6xl mx-auto mt-12">
-          <h2 className="text-5xl font-extrabold mb-16 text-center">Events by <span className="text-green-400">Glitch</span></h2>
+          <ScrollFloat
+            animationDuration={2}
+            ease="power2.out"
+            scrollStart="top center"
+          >
+            <h2 className="text-5xl font-extrabold mb-16 text-center">
+              Events by <span className="text-green-400">Glitch</span>
+            </h2>
+          </ScrollFloat>
+
+
+
 
           <div className="relative mt-14">
             {/* Vertical Scroll Line */}
@@ -143,9 +155,15 @@ export default function AboutPage() {
 
       <section className="bg-black text-white py-24 px-8">
       <div className="max-w-6xl mx-auto mt-12 mb-14">
+        <ScrollFloat
+            animationDuration={2}
+            ease="power2.out"
+            scrollStart="top center"
+          >
         <h2 className="text-5xl font-extrabold mb-16 text-center">
           Affiliations with other <span className="text-green-400">clubs</span>
         </h2>
+        </ScrollFloat>
       </div>
 
       <div className="grid md:grid-cols-3 gap-12 mb-25">

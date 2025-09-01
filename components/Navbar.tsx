@@ -6,13 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   { name: "Team", href: "/team" },
   { name: "Insights", href: "/blogs" },
   { name: "Projects", href: "/projects" },
+  {name: "Contact Us", href: "/contact" }
 ];
 
 export default function Header() {

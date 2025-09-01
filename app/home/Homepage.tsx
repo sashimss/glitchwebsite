@@ -5,7 +5,7 @@ import { FaPlay } from "react-icons/fa";
 export default function HomePage() {
   return (
     <>
-      <div className="w-full h-[90vh] bg-gray-100 relative overflow-hidden">
+      {/* <div className="w-full h-[90vh] bg-gray-100 relative overflow-hidden">
         <video 
           className="w-full h-[90vh] object-cover brightness-65"
           src="/glitch_promo.mp4"
@@ -23,7 +23,17 @@ export default function HomePage() {
             GLITCH
           </span>
         </div>
+      </div> */}
+
+      <div className="w-full h-140 bg-[#0B0F13] py-12">
+        <iframe
+          src="/gameglitch/topdown-web/index.html"
+          className="w-full h-full border-none"
+          title="Topdown Game"
+          allowFullScreen
+        />
       </div>
+
       
       <div className="w-full h-[90vh] bg-[#0B0F13] relative overflow-hidden flex items-center">
         <div className="absolute w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center px-4">

@@ -1,9 +1,9 @@
 "use client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Search, Key, Menu } from "lucide-react";
+import { Search, Key, Menu, LogIn } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname,useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -17,6 +17,7 @@ const navLinks = [
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeLink, setActiveLink] = React.useState(pathname);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -26,6 +27,10 @@ export default function Header() {
     phone: "0123456789",
     email: "glitch@iith.ac.in",
   };
+
+  const handlelogin=()=>{
+    router.push('/login');
+  }
 
   return (
     <header 
@@ -61,6 +66,13 @@ export default function Header() {
       <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center justify-start md:justify-center">
         <img src="/logo-nobg.png" alt="Glitch Logo" className="h-12 mr-2" />
         <span className="text-4xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00, 0 0 30px #00ff00, 0 0 0 #00ff00" }}>GLITCH</span>
+        <button
+          className="bg-primary text-white text-base font-semibold ml-16 px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:bg-green-600 hover:scale-105"
+          style={{ boxShadow: "0 2px 16px 0 #00ff00" }}
+          onClick={() => {handlelogin()}}
+        >
+          Login
+        </button>
       </div>
 
       <div className="md:hidden">
@@ -110,7 +122,6 @@ export default function Header() {
           <Key className="h-5 w-5" />
         </button>
       </div>
-
       {isModalOpen && (pathname=="/" || pathname=="/about" ||  pathname=="/team" || pathname=="/blogs" || pathname=="/projects")&&(
         <div className="fixed top-16 right-6 bg-background p-4 rounded-lg shadow-lg text-foreground w-64 z-50 border border-primary">
           <h2 className="text-lg font-bold mb-2">Office Details</h2>

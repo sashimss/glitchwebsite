@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname,useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { getCookie, deleteCookie } from "cookies-next";
+import Image from "next/image";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -72,9 +73,17 @@ export default function Header() {
       </nav>
 
       <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center justify-start md:justify-center">
-        <img src="/logo-nobg.png" alt="Glitch Logo" className="h-12 mr-2" />
-        <span className="text-4xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00, 0 0 30px #00ff00, 0 0 0 #00ff00" }}>GLITCH</span>
-      </div>
+  <Image
+    src="/logo-nobg.png"
+    alt="Glitch Logo"
+    width={48}
+    height={48}
+    priority
+  />
+  <span className="text-4xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00" }}>
+    GLITCH
+  </span>
+</div>
 
       <div className="md:hidden">
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-primary hover:text-foreground">

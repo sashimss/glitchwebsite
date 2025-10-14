@@ -9,8 +9,10 @@ import PageHeader from "@/components/page-header";
 
 
 // --- Main Blog Page ---
-export default async function BlogPage({ params }: { params: { slug: string } }) {
-  const blog = await getMarkdownContent(params.slug);
+export default async function BlogPage({ params }: { params: { slug: string | Promise<string> } }) {
+  // Next.js may provide params values as promises in some environments — await them before use
+  const slug = await params.slug;
+  const blog = await getMarkdownContent(slug);
 
   if (!blog) {
     return (
@@ -23,7 +25,9 @@ export default async function BlogPage({ params }: { params: { slug: string } })
   return (
 
     <>
-    <PageHeader title={blog.title} imageUrl="/images/cannon.png" />
+    <PageHeader title={blog.title} showImage={false} />
+
+
     <div className=" w-[80vw] mx-auto px-4 py-12">
       {/* Hero Section */}
       <section className="mb-10">
@@ -42,7 +46,7 @@ export default async function BlogPage({ params }: { params: { slug: string } })
             <span className="text-gray-400 text-base">{blog.readTime}</span>
           </div>
           <Link
-            href="/blog"
+            href="/blogs"
             className="text-green-400 hover:underline text-base font-medium"
           >
             ← Back to Blogs

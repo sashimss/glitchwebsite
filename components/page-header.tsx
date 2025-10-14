@@ -1,16 +1,16 @@
 // components/ui/page-header.tsx
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface PageHeaderProps {
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
+     showImage?: boolean; //
 }
 
-export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
+export default function PageHeader({ title, imageUrl,  showImage = true, }: PageHeaderProps) {
     const pathname = usePathname();
 
     const segments = pathname
@@ -25,6 +25,12 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
     return { label, href };
   }),
 ];
+
+  // condition to decide if image should be displayed
+  const shouldShowImage = showImage && !!imageUrl;
+
+  // adjust height dynamically
+  const headerHeight = shouldShowImage ? "h-[320px] md:h-[550px]" : "h-[220px] md:h-[320px]";
 
     return (
         <div className="relative w-full h-[320px] md:h-[550px] overflow-hidden text-white">
@@ -56,12 +62,19 @@ export default function PageHeader({ title, imageUrl }: PageHeaderProps) {
                     {title}
                 </h1>
 
-                <div className="hidden sm:block relative w-90 h-90 md:w-95 md:h-95 rounded-full overflow-visible shrink-0">
-                    <div className="absolute w-full h-full flex justify-end">
-                    <div className="relative w-90 h-90 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100"></div>
-                    </div>
-                    <img src={imageUrl} alt="Character" className="h-110 relative translate-x-[20px] translate-y-[-25px]" />
-                </div>
+          {/* Conditionally render image */}
+          {shouldShowImage && (
+            <div className="hidden sm:block relative w-90 h-90 md:w-95 md:h-95 rounded-full overflow-visible shrink-0">
+              <div className="absolute w-full h-full flex justify-end">
+                <div className="relative w-90 h-90 bg-gradient-to-b from-green-700 to-green-0 rounded-full opacity-100"></div>
+              </div>
+              <img
+                src={imageUrl}
+                alt="Character"
+                className="h-110 relative translate-x-[20px] translate-y-[-25px]"
+              />
+            </div>
+          )}
                 </div>
 
             </div>

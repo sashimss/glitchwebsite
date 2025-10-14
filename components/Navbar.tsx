@@ -42,8 +42,8 @@ export default function Header() {
 
   return (
     <header 
-    className="w-full  flex items-center justify-between px-6 py-12 relative"
-          style={{ background: "var(--header-bg)" }}
+    className="w-full  flex items-center justify-between px-6 py-12 relative z-50"
+      style={{ background: "var(--header-bg)" }}
     >
       
       <nav className="hidden md:flex space-x-4">

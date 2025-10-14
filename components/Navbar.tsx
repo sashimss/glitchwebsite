@@ -5,6 +5,7 @@ import { Search, Key, Menu, LogIn } from "lucide-react";
 import Link from "next/link";
 import { usePathname,useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { getCookie, deleteCookie } from "cookies-next";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -21,16 +22,23 @@ export default function Header() {
   const [activeLink, setActiveLink] = React.useState(pathname);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-  const officeDetails = {
-    address: "IIT Hyderabad",
-    phone: "0123456789",
-    email: "glitch@iith.ac.in",
+  React.useEffect(() => {
+    const token = getCookie("authToken");
+    setIsLoggedIn(!!token); // ✅ check login status
+  }, []);
+
+  const handleLogin = () => {
+    router.push("/login");
   };
 
-  const handlelogin=()=>{
-    router.push('/login');
-  }
+  const handleLogout = () => {
+    deleteCookie("authToken", { path: "/" });
+    deleteCookie("guestMode", { path: "/" });
+    setIsLoggedIn(false);
+    router.push("/"); // redirect to homepage after logout
+  };
 
   return (
     <header 
@@ -66,13 +74,6 @@ export default function Header() {
       <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center justify-start md:justify-center">
         <img src="/logo-nobg.png" alt="Glitch Logo" className="h-12 mr-2" />
         <span className="text-4xl font-bold text-primary" style={{ textShadow: "0 0 30px #00ff00, 0 0 30px #00ff00, 0 0 0 #00ff00" }}>GLITCH</span>
-        <button
-          className="bg-primary text-white text-base font-semibold ml-16 px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:bg-green-600 hover:scale-105"
-          style={{ boxShadow: "0 2px 16px 0 #00ff00" }}
-          onClick={() => {handlelogin()}}
-        >
-          Login
-        </button>
       </div>
 
       <div className="md:hidden">
@@ -110,32 +111,25 @@ export default function Header() {
       )}
 
 
-      {/* Right Navbar */}
-      <div className="hidden sm:flex items-center space-x-6">
-        <a href="mailto:glitch@iith.ac.in" className="text-primary text-sm sm:text-base">
-          glitch@iith.ac.in
-        </a>
-        <button
-          className="text-primary hover:text-foreground"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <Key className="h-5 w-5" />
-        </button>
-      </div>
-      {isModalOpen && (pathname=="/" || pathname=="/about" ||  pathname=="/team" || pathname=="/blogs" || pathname=="/projects")&&(
-        <div className="fixed top-16 right-6 bg-background p-4 rounded-lg shadow-lg text-foreground w-64 z-50 border border-primary">
-          <h2 className="text-lg font-bold mb-2">Office Details</h2>
-          <p className="mb-1 text-sm"><strong>Address:</strong><br />{officeDetails.address}</p>
-          <p className="mb-1 text-sm"><strong>Phone Number:</strong><br />{officeDetails.phone}</p>
-          <p className="mb-2 text-sm"><strong>Email Address:</strong><br />{officeDetails.email}</p>
+      <div className="hidden sm:flex items-center space-x-1">
+        {isLoggedIn ? (
           <button
-            className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm hover:bg-primary-foreground hover:text-primary"
-            onClick={() => setIsModalOpen(false)}
+            className="bg-primary text-white text-base font-semibold ml-16 px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:bg-red-500 hover:scale-105"
+            style={{ boxShadow: "0 2px 16px 0 #00ff00" }}
+            onClick={handleLogout}
           >
-            Close
+            Logout
           </button>
-        </div>
-      )}
+        ) : (
+          <button
+            className="bg-primary text-white text-base font-semibold ml-16 px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:bg-green-600 hover:scale-105"
+            style={{ boxShadow: "0 2px 16px 0 #00ff00" }}
+            onClick={handleLogin}
+          >
+            Login
+          </button>
+        )}
+      </div>
     </header>
   );
 }

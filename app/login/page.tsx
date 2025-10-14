@@ -3,40 +3,15 @@ import { setCookie } from "cookies-next";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [hostel, setHostel] = useState("");
   const [needsHostel, setNeedsHostel] = useState(false);
-  const [userId, setUserId] = useState(""); // store uid for hostel update
+  const [hostel, setHostel] = useState("");
+  const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      const uid = userCred.user.uid;
-      const userDoc = await getDoc(doc(db, "users", uid));
-
-      if (!userDoc.exists() || !userDoc.data()?.hostel) {
-        setNeedsHostel(true);
-        setUserId(uid);
-        return; // wait for hostel input
-      }
-
-      const token = await userCred.user.getIdToken();
-      setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
-      router.push("/");
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -55,6 +30,7 @@ export default function LoginPage() {
 
       const token = await result.user.getIdToken();
       setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
+      setCookie("guestMode", "false", { path: "/", maxAge: 60 * 60 * 24 });
       router.push("/");
     } catch (err: any) {
       setError(err.message);
@@ -71,10 +47,17 @@ export default function LoginPage() {
       const user = auth.currentUser!;
       const token = await user.getIdToken();
       setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
+      setCookie("guestMode", "false", { path: "/", maxAge: 60 * 60 * 24 });
       router.push("/");
     } catch (err: any) {
       setError(err.message);
     }
+  };
+
+  const handleGuestMode = () => {
+    // Set a cookie to indicate guest/anonymous mode
+    setCookie("guestMode", "true", { path: "/", maxAge: 60 * 60 * 24 });
+    router.push("/");
   };
 
   return (
@@ -95,31 +78,22 @@ export default function LoginPage() {
         </h2>
 
         {!needsHostel ? (
-          <form onSubmit={handleLogin} className="space-y-4 mt-8">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded-md bg-black text-white border border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 rounded-md bg-black text-white border border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
+          <div className="space-y-4 mt-8">
             <button
-              type="submit"
+              onClick={handleGoogleSignIn}
               className="w-full py-2 rounded-md bg-green-600 text-black font-bold hover:bg-green-500 transition"
               style={{ boxShadow: "0 0 10px #00ff00, 0 0 20px #00ff00" }}
             >
-              Login
+              Sign in with Google
             </button>
-          </form>
+
+            <button
+              onClick={handleGuestMode}
+              className="w-full py-2 rounded-md bg-transparent text-green-400 border border-green-400 font-bold hover:bg-green-700/20 transition"
+            >
+              Continue without login
+            </button>
+          </div>
         ) : (
           <div className="space-y-4 mt-8">
             <p className="text-white">Please enter your hostel name:</p>
@@ -139,16 +113,6 @@ export default function LoginPage() {
               Submit Hostel
             </button>
           </div>
-        )}
-
-        {!needsHostel && (
-          <button
-            onClick={handleGoogleSignIn}
-            className="w-full mt-4 py-2 rounded-md bg-green-600 text-black font-bold hover:bg-green-500 transition"
-            style={{ boxShadow: "0 0 10px #00ff00, 0 0 20px #00ff00" }}
-          >
-            Sign in with Google
-          </button>
         )}
 
         {error && <p className="text-red-400 text-sm mt-3">{error}</p>}

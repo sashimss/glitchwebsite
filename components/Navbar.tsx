@@ -7,6 +7,8 @@ import { usePathname,useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { getCookie, deleteCookie } from "cookies-next";
 import Image from "next/image";
+import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -26,19 +28,41 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   React.useEffect(() => {
+  const checkLogin = () => {
     const token = getCookie("authToken");
-    setIsLoggedIn(!!token); // ✅ check login status
-  }, []);
+    setIsLoggedIn(!!token);
+  };
+
+  checkLogin();
+  window.addEventListener("storage", checkLogin);
+  return () => window.removeEventListener("storage", checkLogin);
+}, []);
+
 
   const handleLogin = () => {
     router.push("/login");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    //Sign out from Firebase (removes Firebase session)
+    await signOut(auth);
+
+    // Remove cookies used by your app
     deleteCookie("authToken", { path: "/" });
     deleteCookie("guestMode", { path: "/" });
+
+    // Update UI instantly
     setIsLoggedIn(false);
-    router.push("/"); // redirect to homepage after logout
+
+    // Optional: notify other tabs
+    window.dispatchEvent(new Event("storage"));
+
+    // Redirect to homepage
+    router.push("/");
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
   };
 
   return (

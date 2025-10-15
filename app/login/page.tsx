@@ -17,7 +17,17 @@ export default function LoginPage() {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      const uid = result.user.uid;
+      const user = result.user;
+
+      // ✅ Restrict login to IITH accounts only
+      if (!user.email || !user.email.endsWith("@iith.ac.in")) {
+        setError("Please use your IIT Hyderabad account to log in.");
+        await auth.signOut();
+        return;
+      }
+
+      const uid = user.uid;
+
 
       const userRef = doc(db, "users", uid);
       const userDoc = await getDoc(userRef);
@@ -30,6 +40,7 @@ export default function LoginPage() {
 
       const token = await result.user.getIdToken();
       setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
+      window.dispatchEvent(new Event("storage"));
       setCookie("guestMode", "false", { path: "/", maxAge: 60 * 60 * 24 });
       router.push("/");
     } catch (err: any) {
@@ -47,6 +58,7 @@ export default function LoginPage() {
       const user = auth.currentUser!;
       const token = await user.getIdToken();
       setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
+      window.dispatchEvent(new Event("storage"));
       setCookie("guestMode", "false", { path: "/", maxAge: 60 * 60 * 24 });
       router.push("/");
     } catch (err: any) {

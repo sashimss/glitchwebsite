@@ -10,6 +10,9 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+    // Allow APIs to proceed even without cookies
+  if (req.nextUrl.pathname.startsWith("/api")) return NextResponse.next();
+
   // ✅ Allow both logged-in users and guests
   if (token || guest === "true") {
     return NextResponse.next();

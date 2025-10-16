@@ -1,8 +1,7 @@
-// pages/api/submit-score.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import admin from "@/lib/firebaseadmin";
 import forge from "node-forge";
-import prisma from "@/lib/prisma"; // your Prisma client
+import prisma from "@/lib/prisma"; // Prisma client
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST")
@@ -26,15 +25,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const privateKey = forge.pki.privateKeyFromPem(privateKeyPem);
     const decryptedStr = privateKey.decrypt(forge.util.decode64(data), "RSA-OAEP");
 
-    const payload = JSON.parse(decryptedStr);
-    if (payload.uid !== uid)
+    // 3️⃣ Parse GAMEID_UID_SCORE
+    const [gameIdStr, receivedUid, scoreStr] = decryptedStr.split("_");
+    if (receivedUid !== uid)
       return res.status(401).json({ error: "UID mismatch" });
 
-    const { gameId, score } = payload;
+    const gameId = parseInt(gameIdStr, 10);
+    const score = parseInt(scoreStr, 10);
     if (!gameId || score == null)
       return res.status(400).json({ error: "Invalid payload" });
 
-    // 3️⃣ Insert user if not exists, link hostel from StudentHostels
+    // 4️⃣ Insert user if not exists, link hostel
     let user = await prisma.user.findUnique({ where: { uid } });
 
     if (!user) {
@@ -54,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // 4️⃣ Update the score for the correct game column
+    // 5️⃣ Update score column
     const scoreColumn = `bestScore${gameId}` as keyof typeof user;
 
     await prisma.user.update({

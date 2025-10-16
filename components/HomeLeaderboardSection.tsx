@@ -22,7 +22,6 @@ interface HostelLeaderboard {
 const HomeLeaderboardSection = () => {
     const [leaderboardData, setLeaderboardData] = useState<HostelLeaderboard[]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    //   const [isMobile, setIsMobile] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(
         typeof window !== "undefined" ? window.innerWidth < 768 : false
@@ -45,19 +44,17 @@ const HomeLeaderboardSection = () => {
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
 
-    // Fetch top 3 hostels (mobile) or top 10 (desktop)
+    // Fetch leaderboard and take top 3 only
     useEffect(() => {
-        if (typeof window === "undefined") return; // Ensure this runs only on client
+        if (typeof window === "undefined") return;
         const fetchLeaderboard = async () => {
             try {
                 const response = await fetch("/api/leaderboard/hostels");
                 const data = await response.json();
                 console.log("Leaderboard data:", data.leaderboard);
                 if (data.leaderboard) {
-                    // Get top 3 for mobile, top 10 for desktop
-                    const topHostels = isMobile
-                        ? data.leaderboard.slice(0, 3)
-                        : data.leaderboard.slice(0, 10);
+                    // Show top 3 only
+                    const topHostels = data.leaderboard.slice(0, 3);
                     setLeaderboardData(topHostels);
                 }
             } catch (error) {
@@ -69,13 +66,12 @@ const HomeLeaderboardSection = () => {
         };
 
         fetchLeaderboard();
-    }, [isMobile]);
+    }, []);
 
     // GSAP Animations
     useEffect(() => {
         if (!loading && leaderboardData.length > 0) {
             const ctx = gsap.context(() => {
-                // Title fade in
                 gsap.from(titleRef.current, {
                     opacity: 0,
                     y: -50,
@@ -88,21 +84,7 @@ const HomeLeaderboardSection = () => {
                     },
                 });
 
-                // Stagger animation for leaderboard entries
-                gsap.from(".leaderboard-entry", {
-                    opacity: 0,
-                    x: -100,
-                    duration: 0.8,
-                    stagger: 0.15,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: barsRef.current,
-                        start: "top 80%",
-                        toggleActions: "play none none none",
-                    },
-                });
 
-                // Animate bars growing
                 gsap.from(".bar-fill-home", {
                     width: 0,
                     duration: 1.5,
@@ -115,7 +97,6 @@ const HomeLeaderboardSection = () => {
                     },
                 });
 
-                // Buttons fade in
                 gsap.from(buttonsRef.current, {
                     opacity: 0,
                     y: 30,
@@ -138,11 +119,9 @@ const HomeLeaderboardSection = () => {
     const handleGameClick = () => {
         if (!isMobile) {
             if (isLoggedIn) {
-                // Smooth scroll to top where game is
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 toast.success("Scrolling to game...");
             } else {
-                // Redirect to login
                 window.location.href = "/login";
             }
         } else {
@@ -169,7 +148,7 @@ const HomeLeaderboardSection = () => {
 
     if (loading) {
         return (
-            <div className="w-full min-h-[80vh] bg-[#0B0F13] flex items-center justify-center">
+            <div className="w-full min-h-[50vh] bg-[#0B0F13] flex items-center justify-center">
                 <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
@@ -192,76 +171,61 @@ const HomeLeaderboardSection = () => {
 
             <div
                 ref={sectionRef}
-                className="w-full min-h-[80vh] bg-[#0B0F13] relative overflow-hidden py-12 px-6 lg:px-12"
+                className="w-full min-h-[50vh] bg-[#0B0F13] relative overflow-hidden py-8 px-6 lg:px-8"
             >
-                {/* Background glow effects */}
+                {/* Background glows */}
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
 
                 <div className="max-w-7xl mx-auto relative z-10">
-                    {/* Title */}
                     <h2
                         ref={titleRef}
-                        className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 neon-title"
+                        className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4"
+            
                     >
                         🏆 HOSTEL LEADERBOARD 🏆
                     </h2>
-                    <p className="text-center text-cyan-300 text-lg mb-12">
+                    <p className="text-center text-white text-lg mb-8">
                         Inter-Hostel Gaming Championship Standings
                     </p>
 
-                    {/* Leaderboard */}
-                    <div
-                        ref={barsRef}
-                        className="space-y-4 mb-8"
-                    >
-                        {leaderboardData.map((hostel, index) => (
+                    {/* Leaderboard entries */}
+                    <div ref={barsRef} className="space-y-3 mb-4">
+                        {leaderboardData.map((hostel) => (
                             <div
                                 key={hostel.rank}
                                 className="leaderboard-entry bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 relative overflow-hidden group"
                             >
-                                {/* Hover glow effect */}
                                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                                {/* Content */}
                                 <div className="relative z-10">
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-4">
-                                            {/* Rank Badge */}
                                             <div className={`flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br ${getRankColor(hostel.rank)} shadow-lg`}>
                                                 {getRankIcon(hostel.rank)}
                                             </div>
-
-                                            {/* Hostel Name */}
                                             <div>
-                                                <h3 className="text-2xl font-bold text-white">
-                                                    {hostel.hostel_name}
-                                                </h3>
+                                                <h3 className="text-2xl font-bold text-white">{hostel.hostel_name}</h3>
                                                 <p className="text-sm text-gray-400">Rank #{hostel.rank}</p>
                                             </div>
                                         </div>
-
-                                        {/* Score */}
                                         <div className="text-right">
-                                            <p className="text-3xl font-bold text-cyan-400 neon-text-score">
+                                            <p className="text-3xl font-bold text-primary neon-text-score">
                                                 {hostel.total_score.toLocaleString()}
                                             </p>
                                             <p className="text-sm text-gray-400">Total Points</p>
                                         </div>
                                     </div>
 
-                                    {/* Progress Bar */}
                                     <div className="relative h-3 bg-gray-800 rounded-full overflow-hidden">
                                         <div
                                             className={`bar-fill-home absolute h-full bg-gradient-to-r ${getRankColor(hostel.rank)} shadow-lg transition-all duration-300`}
                                             style={{ width: `${hostel.score_percentage}%` }}
                                         >
-                                            {/* Animated shine effect */}
                                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine"></div>
                                         </div>
                                     </div>
 
-                                    {/* Percentage */}
                                     <p className="text-right text-xs text-gray-500 mt-1">
                                         {hostel.score_percentage.toFixed(1)}% of top score
                                     </p>
@@ -270,44 +234,29 @@ const HomeLeaderboardSection = () => {
                         ))}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div
-                        ref={buttonsRef}
-                        className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12"
-                    >
-                        {/* Left Button - Wanna Participate / Go to Game */}
+                    {/* Buttons */}
+                    <div ref={buttonsRef} className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
                         <button
                             onClick={handleGameClick}
                             className="group relative w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-black font-bold text-lg rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/50 neon-button-left"
                         >
-                            {/* Animated background */}
                             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                            {/* Content */}
                             <span className="relative flex items-center justify-center gap-2">
                                 <Gamepad2 className="w-5 h-5" />
                                 {isLoggedIn ? "GO TO GAME" : "WANNA PARTICIPATE?"}
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                             </span>
-
-                            {/* Glow effect */}
                             <div className="absolute inset-0 rounded-lg blur-xl bg-green-500/30 -z-10 group-hover:bg-green-500/50 transition-all duration-300"></div>
                         </button>
 
-                        {/* Right Button - See Full Leaderboard */}
                         <Link href="/leaderboard" className="w-full sm:w-auto">
-                            <button className="group relative w-full px-8 py-4 bg-transparent border-2 border-cyan-500 text-cyan-400 font-bold text-lg rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:bg-cyan-500/10 hover:shadow-2xl hover:shadow-cyan-500/50 neon-button-right">
-                                {/* Animated border glow */}
+                            <button className="group relative w-full px-8 py-4 bg-transparent border-2 border-primary text-primary font-bold text-lg rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:bg-cyan-500/10 hover:shadow-2xl hover:shadow- neon-button-right">
                                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/20 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                                {/* Content */}
                                 <span className="relative flex items-center justify-center gap-2">
                                     <Trophy className="w-5 h-5" />
                                     SEE FULL LEADERBOARD
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                                 </span>
-
-                                {/* Outer glow */}
                                 <div className="absolute inset-0 rounded-lg blur-xl bg-cyan-500/20 -z-10 group-hover:bg-cyan-500/40 transition-all duration-300"></div>
                             </button>
                         </Link>
@@ -316,47 +265,42 @@ const HomeLeaderboardSection = () => {
             </div>
 
             <style jsx>{`
-        .neon-title {
-          text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
-          animation: pulse-glow 3s ease-in-out infinite;
-        }
+                .neon-title {
+                    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+                    animation: pulse-glow 3s ease-in-out infinite;
+                }
+                .neon-text-score {
+                    text-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4;
+                }
+                @keyframes pulse-glow {
+                    0%, 100% { 
+                        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+                        opacity: 1; 
+                    }
+                    50% { 
+                        text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, 0 0 45px #00ffff;
+                        opacity: 0.9; 
+                    }
+                }
+                @keyframes shine {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }
+                .animate-shine {
+                    animation: shine 3s ease-in-out infinite;
+                }
+                .neon-button-left:hover {
+                    box-shadow: 0 0 20px rgba(34, 197, 94, 0.6), 
+                                0 0 40px rgba(34, 197, 94, 0.4),
+                                0 0 60px rgba(34, 197, 94, 0.2);
+                }
+                .neon-button-right:hover {
+                    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 
+                                0 0 40px rgba(0, 255, 255, 0.4),
+                                0 0 60px rgba(0, 255, 255, 0.2);
+                }
 
-        .neon-text-score {
-          text-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4;
-        }
-
-        @keyframes pulse-glow {
-          0%, 100% { 
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
-            opacity: 1; 
-          }
-          50% { 
-            text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, 0 0 45px #00ffff;
-            opacity: 0.9; 
-          }
-        }
-
-        @keyframes shine {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-
-        .animate-shine {
-          animation: shine 3s ease-in-out infinite;
-        }
-
-        .neon-button-left:hover {
-          box-shadow: 0 0 20px rgba(34, 197, 94, 0.6), 
-                      0 0 40px rgba(34, 197, 94, 0.4),
-                      0 0 60px rgba(34, 197, 94, 0.2);
-        }
-
-        .neon-button-right:hover {
-          box-shadow: 0 0 20px rgba(6, 182, 212, 0.6), 
-                      0 0 40px rgba(6, 182, 212, 0.4),
-                      0 0 60px rgba(6, 182, 212, 0.2);
-        }
-      `}</style>
+            `}</style>
         </>
     );
 };

@@ -8,9 +8,10 @@ import { submitScore } from "@/utils/submitscore";
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
-  const [isGuest,setIsGuest] = useState(true);
-  const [isLoggedIn,setIsLoggedIn] = useState(false);
+  const [isGuest, setIsGuest] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Detect if mobile
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -18,45 +19,63 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  useEffect(()=>{
-    const guest = getCookie("guestMode")==="true";
+  // Get guest / logged-in state
+  useEffect(() => {
+    const guest = getCookie("guestMode") === "true";
     const token = !!getCookie("authToken");
     setIsGuest(guest);
     setIsLoggedIn(token);
-  },[])
+  }, []);
 
+  const shouldShowVideo = isMobile || isGuest; // mobile → video, desktop guest → video
+  const shouldShowGame = !isMobile && !isGuest; // desktop logged-in → game
+
+  // Submit score only if desktop + logged-in
   useEffect(() => {
-    // Call this whenever Unity sends a score
+    if (!shouldShowGame) return; // do nothing for mobile/guest
+
     const interval = setInterval(() => {
       submitScore();
     }, 2000); // check every 2s if Unity has payload
 
     return () => clearInterval(interval);
-  }, []);
+  }, [shouldShowGame]);
 
+  // Define getUID only if logged in AND desktop
   useEffect(() => {
-  (window as any).getUID = async () => {
-    const token = getCookie("authToken");
-    if (!token) return null;
+  if (shouldShowGame && isLoggedIn) {
+    (window as any).getUID = async () => {
+      const token = getCookie("authToken");
+      if (!token) return null;
 
-    try {
-      const res = await fetch("/api/get-uid", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) return null;
+      try {
+        const res = await fetch("/api/get-uid", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      const data = await res.json();
-      return data.uid;
-    } catch {
-      return null;
-    }
+        // if API returns non-200
+        if (!res.ok) {
+          console.error("Failed to fetch UID:", res.status, await res.text());
+          return null;
+        }
+
+        const data = await res.json();
+        return data.uid;
+      } catch (err) {
+        console.error("Error parsing JSON from get-uid:", err);
+        return null;
+      }
+    };
+  } else {
+    (window as any).getUID = undefined;
+  }
+
+  return () => {
+    (window as any).getUID = undefined;
   };
-}, []);
+}, [shouldShowGame, isLoggedIn]);
 
-
-
-  const shouldShowVideo = isMobile || isGuest; // ✅ phone → always video, desktop guest → video
-  const shouldShowGame = !isMobile && !isGuest; // ✅ desktop logged-in → game
 
   return (
     <>
@@ -84,7 +103,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ✅ About section remains same */}
+      {/* About section */}
       <div className="w-full min-h-[90vh] bg-[#0B0F13] relative overflow-hidden flex flex-col lg:flex-row items-center justify-center px-6 lg:px-12">
         <div className="w-full lg:w-1/2 p-6 lg:p-12 text-center lg:text-left">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 lg:mb-12">
@@ -118,8 +137,7 @@ export default function HomePage() {
         </div>
       </div>
 
-
-      {/*: Leaderboard Section */}
+      {/* Leaderboard Section */}
       <HomeLeaderboardSection />
 
       {/* Video image section */}

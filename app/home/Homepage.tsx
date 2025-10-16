@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaPlay } from "react-icons/fa";
 import { getCookie } from "cookies-next";
+import HomeLeaderboardSection from "@/components/HomeLeaderboardSection";
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -42,7 +43,7 @@ export default function HomePage() {
       )}
 
       {shouldShowGame && (
-        <div className="w-full h-140 bg-[#0B0F13] py-12">
+        <div className="w-full h-140 gi py-12">
           <iframe
             src="/gameglitch/topdown-web/index.html"
             className="w-full h-full border-none"
@@ -85,6 +86,10 @@ export default function HomePage() {
           />
         </div>
       </div>
+
+
+      {/*: Leaderboard Section */}
+      <HomeLeaderboardSection />
 
       {/* Video image section */}
       <div className="w-full h-[90vh] relative overflow-hidden">

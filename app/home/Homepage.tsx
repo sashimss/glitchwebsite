@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaPlay } from "react-icons/fa";
 import { getCookie } from "cookies-next";
+import { submitScore } from "@/utils/submitscore";
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -22,6 +23,36 @@ export default function HomePage() {
     setIsGuest(guest);
     setIsLoggedIn(token);
   },[])
+
+  useEffect(() => {
+    // Call this whenever Unity sends a score
+    const interval = setInterval(() => {
+      submitScore();
+    }, 2000); // check every 2s if Unity has payload
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+  (window as any).getUID = async () => {
+    const token = getCookie("authToken");
+    if (!token) return null;
+
+    try {
+      const res = await fetch("/api/get-uid", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return null;
+
+      const data = await res.json();
+      return data.uid;
+    } catch {
+      return null;
+    }
+  };
+}, []);
+
+
 
   const shouldShowVideo = isMobile || isGuest; // ✅ phone → always video, desktop guest → video
   const shouldShowGame = !isMobile && !isGuest; // ✅ desktop logged-in → game

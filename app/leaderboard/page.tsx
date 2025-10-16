@@ -112,7 +112,7 @@ const LeaderboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900  bg-[#0B0F13]  to-gray-900 text-white p-4 md:p-8">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
         <div className="text-center mb-8">

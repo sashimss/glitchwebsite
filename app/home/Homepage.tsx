@@ -5,21 +5,20 @@ import { FaPlay } from "react-icons/fa";
 import { getCookie } from "cookies-next";
 import HomeLeaderboardSection from "@/components/HomeLeaderboardSection";
 // import { submitScore } from "@/utils/submitscore";
-
-
-
-
-
-
-
-
-
-
+import { getDecryptedCookie } from "@/utils/cookiesecure";
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isGuest, setIsGuest] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  
+  useEffect(() => {
+  const guest = getDecryptedCookie("guestMode");
+  const token = getDecryptedCookie("authToken");
+  console.log("Decrypted guestMode:", guest);
+  console.log("Decrypted authToken:", token);
+}, []);
 
   // Detect if mobile
   useEffect(() => {
@@ -31,11 +30,12 @@ export default function HomePage() {
 
   // Get guest / logged-in state
   useEffect(() => {
-    const guest = getCookie("guestMode") === "true";
-    const token = !!getCookie("authToken");
-    setIsGuest(guest);
-    setIsLoggedIn(token);
-  }, []);
+  const guest = getDecryptedCookie("guestMode") === true;
+  const token = getDecryptedCookie("authToken");
+  setIsGuest(guest);
+  setIsLoggedIn(!!token);
+}, []);
+
 
   const shouldShowVideo = isMobile || isGuest; // mobile → video, desktop guest → video
   const shouldShowGame = !isMobile && !isGuest; // desktop logged-in → game
@@ -55,7 +55,7 @@ export default function HomePage() {
   useEffect(() => {
   if (shouldShowGame && isLoggedIn) {
     (window as any).getUID = async () => {
-      const token = getCookie("authToken");
+      const token = getDecryptedCookie("authToken");
       if (!token) return null;
 
       try {
@@ -95,7 +95,7 @@ useEffect(() => {
     if (event.data.type === "score") {
       const { gameName, score } = event.data;
 
-      const token = getCookie("authToken");
+      const token = getDecryptedCookie("authToken");
       if (!token) return;
 
       fetch("/api/submit-score", {

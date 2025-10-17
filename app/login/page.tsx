@@ -41,7 +41,7 @@ export default function LoginPage() {
         name: user.displayName,
       }),
     });
-
+    console.log("User registered or already exists.");
     window.dispatchEvent(new Event("storage"));
     router.push("/");
   } catch (err: any) {

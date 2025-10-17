@@ -134,7 +134,7 @@ useEffect(() => {
       {shouldShowGame && (
         <div className="w-360 h-200 gi py-0 ">
           <iframe
-            src="/gameglitch/Final/index.html"
+            src="/gameglitch/GM/index.html"
             className="w-full h-full border-none"
             title="Topdown Game"
             allowFullScreen

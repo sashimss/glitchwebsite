@@ -39,12 +39,12 @@ export default function AboutPage() {
             <span className="text-green-400">& talented</span>
           </h2>
           <p className="text-gray-300 mb-8 text-lg leading-relaxed mt-6">
-            Driven by innovation and creativity, we’re constantly evolving and expanding our platform to bring you the latest and greatest in gaming.
+            Glitch, the vibrant hub for gaming and game development at the Indian Institute of Technology, connects passionate gamers and aspiring developers through exciting tournaments, insightful workshops, and collaborative coding experiences.  
           </p>
 
           <ul className="space-y-4 text-lg">
-            <li className="font-bold">Community Engagement Excellence</li>
-            <li className="font-bold">Quality Indie Game Development</li>
+            <li className="font-bold">Esports Excellence</li>
+            <li className="font-bold">Game Development Innovation</li>  
           </ul>
 
         </div>
@@ -84,10 +84,10 @@ export default function AboutPage() {
                 />
               </div>
               <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-                <p className="text-green-400 text-sm uppercase mb-2">Journey Was Started</p>
-                <h3 className="text-4xl font-bold mb-4">1990</h3>
+                <p className="text-green-400 text-sm uppercase mb-2">Valorant Asus Competition</p>
+                <h3 className="text-4xl font-bold mb-4">Sept 2025</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Your company journey description for 1990 goes here. Highlight important milestones and initial vision.
+                  Glitch kicked off with an electrifying Valorant tournament, uniting gamers and setting the stage for our vibrant community.
                 </p>
               </div>
             </div>
@@ -96,65 +96,28 @@ export default function AboutPage() {
             <div className="flex flex-col md:flex-row-reverse items-center mb-16">
               <div className="md:w-1/2 md:pl-12">
                 <img
-                  src="/images/about-timeline/timeline2.png" // replace with your image
+                  src="/images/about-timeline/timeline2.png"
                   alt="Next Milestone"
                   className="rounded-lg shadow-lg w-full"
                 />
               </div>
               <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
-                <p className="text-green-400 text-sm uppercase mb-2">Reached New Heights</p>
-                <h3 className="text-4xl font-bold mb-4">2000</h3>
+                <p className="text-green-400 text-sm uppercase mb-2">Milan Glitch Competition</p>
+                <h3 className="text-4xl font-bold mb-4">Oct 2025</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Your company milestone description for 2000 goes here. Highlight growth and expansion.
+                  Glitch hosted a thrilling gaming competition, fostering creativity and collaboration among aspiring developers and esports enthusiasts.
                 </p>
               </div>
             </div>
 
-            {/* Timeline Item 1 */}
-            <div className="flex flex-col md:flex-row items-center mb-16">
-              <div className="md:w-1/2 md:pr-12">
-                <img
-                  src="/images/about-timeline/timeline1.png"
-                  alt="Journey Start"
-                  className="rounded-lg shadow-lg w-full"
-                />
-              </div>
-              <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-                <p className="text-green-400 text-sm uppercase mb-2">Journey Was Started</p>
-                <h3 className="text-4xl font-bold mb-4">1990</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Your company journey description for 1990 goes here. Highlight important milestones and initial vision.
-                </p>
-              </div>
-            </div>
-
-            {/* Timeline Item 2 */}
-            <div className="flex flex-col md:flex-row-reverse items-center mb-16">
-              <div className="md:w-1/2 md:pl-12">
-                <img
-                  src="/images/about-timeline/timeline2.png" // replace with your image
-                  alt="Next Milestone"
-                  className="rounded-lg shadow-lg w-full"
-                />
-              </div>
-              <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
-                <p className="text-green-400 text-sm uppercase mb-2">Reached New Heights</p>
-                <h3 className="text-4xl font-bold mb-4">2000</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Your company milestone description for 2000 goes here. Highlight growth and expansion.
-                </p>
-              </div>
-            </div>
-
-            {/* You can keep adding more timeline items following similar structure */}
           </div>
         </div>
       </section>
 
 
 
-      <section className="bg-black text-white py-24 px-8">
-      <div className="max-w-6xl mx-auto mt-12 mb-14">
+      {/* <section className="bg-black text-white py-24 px-8"> */}
+      {/* <div className="max-w-6xl mx-auto mt-12 mb-14">
         <ScrollFloat
             animationDuration={2}
             ease="power2.out"
@@ -164,11 +127,11 @@ export default function AboutPage() {
           Affiliations with other <span className="text-green-400">clubs</span>
         </h2>
         </ScrollFloat>
-      </div>
+      </div> */}
 
-      <div className="grid md:grid-cols-3 gap-12 mb-25">
+      {/* <div className="grid md:grid-cols-3 gap-12 mb-25"> */}
         {/* Card 1 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg group">
+        {/* <div className="relative rounded-lg overflow-hidden shadow-lg group">
           <img
             src="/images/about-timeline/aff1.png"
             alt="Affiliation 1"
@@ -184,10 +147,10 @@ export default function AboutPage() {
               IIT Hyderabad Cultural Council
             </h3>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 2 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg group">
+        {/* <div className="relative rounded-lg overflow-hidden shadow-lg group">
           <img
             src="/images/about-timeline/aff2.png"
             alt="Affiliation 2"
@@ -203,10 +166,10 @@ export default function AboutPage() {
               AI Department Collaboration
             </h3>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 3 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg group">
+        {/* <div className="relative rounded-lg overflow-hidden shadow-lg group">
           <img
             src="/images/about-timeline/aff3.png"
             alt="Affiliation 3"
@@ -222,9 +185,9 @@ export default function AboutPage() {
               Indie Game Dev Network
             </h3>
           </div>
-        </div>
-      </div>
-    </section>
+        </div> */}
+      {/* </div> */}
+    {/* </section> */}
 
     </>
   );

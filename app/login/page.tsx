@@ -10,30 +10,45 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleGoogleSignIn = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-      if (!user.email || !user.email.endsWith("@iith.ac.in")) {
-        setError("Please use your IIT Hyderabad account to log in.");
-        await auth.signOut();
-        return;
-      }
-
-      const uid = user.uid;
-      const token = await user.getIdToken();
-
-      setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
-      setCookie("uid", uid, { path: "/", maxAge: 60 * 60 * 24 });
-      setCookie("guestMode", "false", { path: "/", maxAge: 60 * 60 * 24 });
-
-      window.dispatchEvent(new Event("storage"));
-      router.push("/");
-    } catch (err: any) {
-      setError(err.message);
+    if (!user.email || !user.email.endsWith("@iith.ac.in")) {
+      setError("Please use your IIT Hyderabad account to log in.");
+      await auth.signOut();
+      return;
     }
-  };
+
+    const uid = user.uid;
+    const token = await user.getIdToken();
+
+    // 🍪 Store tokens
+    setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 });
+    setCookie("uid", uid, { path: "/", maxAge: 60 * 60 * 24 });
+    setCookie("guestMode", "false", { path: "/", maxAge: 60 * 60 * 24 });
+
+    // 🚀 Register new user in DB if first time
+    await fetch("/api/register-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        name: user.displayName,
+      }),
+    });
+
+    window.dispatchEvent(new Event("storage"));
+    router.push("/");
+  } catch (err: any) {
+    setError(err.message);
+  }
+};
+
 
   const handleGuestMode = () => {
     setCookie("guestMode", "true", { path: "/", maxAge: 60 * 60 * 24 });

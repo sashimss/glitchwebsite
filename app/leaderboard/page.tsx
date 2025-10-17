@@ -20,7 +20,9 @@ interface Player {
 }
 
 const LeaderboardPage = () => {
-  const [activeTab, setActiveTab] = useState<"overall" | "games" | "players">("overall");
+  const [activeTab, setActiveTab] = useState<"overall" | "games" | "players">(
+    "overall"
+  );
   const [selectedGame, setSelectedGame] = useState(1);
   const [overallData, setOverallData] = useState<HostelScore[]>([]);
   const [gameData, setGameData] = useState<HostelScore[]>([]);
@@ -83,10 +85,9 @@ const LeaderboardPage = () => {
   }, [overallData, activeTab]);
 
   const getRankColor = (rank: number) => {
-    if (rank === 1) return "from-yellow-400 to-yellow-600"; // 🥇 gold
-    if (rank === 2) return "from-gray-300 to-gray-500"; // 🥈 silver
-    if (rank === 3) return "from-orange-400 to-orange-600"; // 🥉 bronze
-    // 🌿 all others use same green tone
+    if (rank === 1) return "from-yellow-400 to-yellow-600";
+    if (rank === 2) return "from-gray-300 to-gray-500";
+    if (rank === 3) return "from-orange-400 to-orange-600";
     return "from-green-800 to-green-700";
   };
 
@@ -103,7 +104,9 @@ const LeaderboardPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl md:text-7xl font-bold mb-4 neon-text">
-            🎮 LEADERBOARD 🎮
+            <span className="hidden sm:inline">🎮 </span>
+            LEADERBOARD
+            <span className="hidden sm:inline"> 🎮</span>
           </h1>
           <p className="text-xl text-[var(--primary)]">
             Inter-Hostel Gaming Championship
@@ -132,10 +135,11 @@ const LeaderboardPage = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${activeTab === tab
+              className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${
+                activeTab === tab
                   ? "bg-gradient-to-r from-green-900 to-green-800 shadow-lg shadow-[var(--primary)]/70 scale-105"
                   : "bg-gray-800 hover:bg-gray-700"
-                }`}
+              }`}
             >
               {icon}
               {label}
@@ -145,15 +149,16 @@ const LeaderboardPage = () => {
 
         {/* Game Selector */}
         {(activeTab === "games" || activeTab === "players") && (
-          <div className="flex justify-center gap-3 mb-8">
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
             {[1, 2, 3, 4, 5].map((gameNum) => (
               <button
                 key={gameNum}
                 onClick={() => setSelectedGame(gameNum)}
-                className={`px-4 py-2 rounded-lg font-semibold transition-all ${selectedGame === gameNum
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  selectedGame === gameNum
                     ? "bg-gradient-to-r from-green-900 to-green-800 shadow-md shadow-[var(--primary)]/60"
                     : "bg-gray-700 hover:bg-gray-600"
-                  }`}
+                }`}
               >
                 Game {gameNum}
               </button>
@@ -163,7 +168,7 @@ const LeaderboardPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto space-y-6">
         {loading ? (
           <div className="text-center py-20">
             <div className="inline-block w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
@@ -171,15 +176,16 @@ const LeaderboardPage = () => {
           </div>
         ) : (
           <>
+            {/* Overall Hostels */}
             {activeTab === "overall" && (
-              <div ref={barsRef} className="space-y-4">
+              <div ref={barsRef} className="space-y-4 px-2 md:px-0">
                 {overallData.map((hostel) => (
                   <div
                     key={hostel.hostel_id}
                     className="bg-gray-900/60 rounded-lg p-4 border border-gray-800 hover:border-[var(--primary)] transition-all duration-300"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-4">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                      <div className="flex items-center gap-4 mb-2 md:mb-0">
                         <div
                           className={`w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r ${getRankColor(
                             hostel.rank
@@ -220,140 +226,51 @@ const LeaderboardPage = () => {
               </div>
             )}
 
-
-
-
-
-
-            {/* Game-Specific Hostel Leaderboard */}
-
-
-            {activeTab === 'games' && (
-
-
-              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-
-
-                {gameData.map((hostel) => (
-
-
-                  <div
-
-
-                    key={hostel.hostel_id}
-
-
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-all duration-300 flex items-center justify-between"
-
-
-                  >
-
-
-                    <div className="flex items-center gap-4">
-
-
-                      <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(hostel.rank)} flex items-center justify-center font-bold text-lg`}>
-
-
-                        {hostel.rank}
-
-
-                      </div>
-
-
-                      <h3 className="text-lg font-bold">{hostel.hostel_name}</h3>
-
-
-                    </div>
-
-
-                    <p className="text-2xl font-bold text-purple-400">{hostel.total_score.toLocaleString()}</p>
-
-
-                  </div>
-
-
-                ))}
-
-
-              </div>
-
-
-            )}
-
-
-
-
-
-            {/* Player Leaderboard */}
-
-
-            {activeTab === 'players' && (
-
-
-              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-
-
-                {playerData.map((player) => (
-
-
-                  <div
-
-
-                    key={player.rank}
-
-
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-green-500 transition-all duration-300"
-
-
-                  >
-
-
-                    <div className="flex items-center justify-between">
-
-
+            {/* Game/Player Sections */}
+            {(activeTab === "games" || activeTab === "players") && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2 md:px-0 max-h-[600px] overflow-y-auto custom-scrollbar">
+                {(activeTab === "games" ? gameData : playerData).map(
+                  (item: any, index: number) => (
+                    <div
+                      key={item.rank || index}
+                      className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-[var(--primary)] transition-all duration-300 flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-4">
-
-
-                        <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(player.rank)} flex items-center justify-center font-bold`}>
-
-
-                          {player.rank}
-
-
+                        <div
+                          className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(
+                            item.rank
+                          )} flex items-center justify-center font-bold`}
+                        >
+                          {item.rank}
                         </div>
-
-
                         <div>
-
-
-                          <h3 className="text-lg font-bold">{player.name}</h3>
-
-
-                          <p className="text-sm text-gray-400">{player.hostel_name}</p>
-
-
+                          <h3 className="text-lg font-bold">
+                            {activeTab === "games"
+                              ? item.hostel_name
+                              : item.name}
+                          </h3>
+                          {activeTab === "players" && (
+                            <p className="text-sm text-gray-400">
+                              {item.hostel_name}
+                            </p>
+                          )}
                         </div>
-
-
                       </div>
-
-
-                      <p className="text-2xl font-bold text-green-400">{player.score.toLocaleString()}</p>
-
-
+                      <p
+                        className={`text-2xl font-bold ${
+                          activeTab === "games"
+                            ? "text-purple-400"
+                            : "text-green-400"
+                        }`}
+                      >
+                        {activeTab === "games"
+                          ? item.total_score.toLocaleString()
+                          : item.score.toLocaleString()}
+                      </p>
                     </div>
-
-
-                  </div>
-
-
-                ))}
-
-
+                  )
+                )}
               </div>
-
-
             )}
           </>
         )}

@@ -26,6 +26,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing email" }, { status: 400 });
     }
 
+    console.log("Registering user:", { uid, email, name });
+
     // 🔍 Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { uid } });
     if (existingUser) {

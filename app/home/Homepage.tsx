@@ -118,7 +118,7 @@ export default function HomePage() {
       {shouldShowGame && (
         <div className="w-360 h-200 gi py-0">
           <iframe
-            src="/gameglitch/GM/index.html"
+            src="/gameglitch/Final/index.html"
             className="w-full h-full border-none"
             title="Topdown Game"
             allowFullScreen

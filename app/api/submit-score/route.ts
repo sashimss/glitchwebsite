@@ -3,6 +3,12 @@ import admin from "@/lib/firebaseadmin";
 import forge from "node-forge";
 import prisma from "@/lib/prisma";
 
+import { Games_Inverse } from "@/lib/constants/games";
+
+
+
+
+
 export async function POST(req: NextRequest) {
   try {
     // 1️⃣ Verify Firebase token
@@ -79,7 +85,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "UID mismatch" }, { status: 401 });
 
     // const gameId = parseInt(gameIdStr, 10);
-    const gameId = 1;
+    const gameId = Games_Inverse[gameIdStr as keyof typeof Games]?.game_id
+    
     
     const score = parseInt(scoreStr, 10);
     if (!gameId || score == null)

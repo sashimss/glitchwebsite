@@ -1,5 +1,6 @@
 "use client";
 
+import { Games_Forward } from "@/lib/constants/games";
 import React, { useState, useEffect, useRef } from "react";
 import { Trophy, Medal, Zap, Users, Crown, Star } from "lucide-react";
 import { getCookie } from "cookies-next";
@@ -261,7 +262,7 @@ const LeaderboardPage = () => {
                     : "bg-gray-700 hover:bg-gray-600"
                 }`}
               >
-                Game {gameNum}
+            {Games_Forward[gameNum as keyof typeof Games_Forward].game_name}
               </button>
             ))}
           </div>

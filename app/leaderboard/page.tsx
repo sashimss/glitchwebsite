@@ -132,11 +132,10 @@ const LeaderboardPage = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${
-                activeTab === tab
+              className={`px-6 py-3 rounded-lg font-bold transition-all duration-300 ${activeTab === tab
                   ? "bg-gradient-to-r from-green-900 to-green-800 shadow-lg shadow-[var(--primary)]/70 scale-105"
                   : "bg-gray-800 hover:bg-gray-700"
-              }`}
+                }`}
             >
               {icon}
               {label}
@@ -151,11 +150,10 @@ const LeaderboardPage = () => {
               <button
                 key={gameNum}
                 onClick={() => setSelectedGame(gameNum)}
-                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                  selectedGame === gameNum
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${selectedGame === gameNum
                     ? "bg-gradient-to-r from-green-900 to-green-800 shadow-md shadow-[var(--primary)]/60"
                     : "bg-gray-700 hover:bg-gray-600"
-                }`}
+                  }`}
               >
                 Game {gameNum}
               </button>
@@ -220,6 +218,142 @@ const LeaderboardPage = () => {
                   </div>
                 ))}
               </div>
+            )}
+
+
+
+
+
+
+            {/* Game-Specific Hostel Leaderboard */}
+
+
+            {activeTab === 'games' && (
+
+
+              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+
+
+                {gameData.map((hostel) => (
+
+
+                  <div
+
+
+                    key={hostel.hostel_id}
+
+
+                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-all duration-300 flex items-center justify-between"
+
+
+                  >
+
+
+                    <div className="flex items-center gap-4">
+
+
+                      <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(hostel.rank)} flex items-center justify-center font-bold text-lg`}>
+
+
+                        {hostel.rank}
+
+
+                      </div>
+
+
+                      <h3 className="text-lg font-bold">{hostel.hostel_name}</h3>
+
+
+                    </div>
+
+
+                    <p className="text-2xl font-bold text-purple-400">{hostel.total_score.toLocaleString()}</p>
+
+
+                  </div>
+
+
+                ))}
+
+
+              </div>
+
+
+            )}
+
+
+
+
+
+            {/* Player Leaderboard */}
+
+
+            {activeTab === 'players' && (
+
+
+              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+
+
+                {playerData.map((player) => (
+
+
+                  <div
+
+
+                    key={player.rank}
+
+
+                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-green-500 transition-all duration-300"
+
+
+                  >
+
+
+                    <div className="flex items-center justify-between">
+
+
+                      <div className="flex items-center gap-4">
+
+
+                        <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(player.rank)} flex items-center justify-center font-bold`}>
+
+
+                          {player.rank}
+
+
+                        </div>
+
+
+                        <div>
+
+
+                          <h3 className="text-lg font-bold">{player.name}</h3>
+
+
+                          <p className="text-sm text-gray-400">{player.hostel_name}</p>
+
+
+                        </div>
+
+
+                      </div>
+
+
+                      <p className="text-2xl font-bold text-green-400">{player.score.toLocaleString()}</p>
+
+
+                    </div>
+
+
+                  </div>
+
+
+                ))}
+
+
+              </div>
+
+
             )}
           </>
         )}

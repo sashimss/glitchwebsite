@@ -4,7 +4,17 @@ import Link from "next/link";
 import { FaPlay } from "react-icons/fa";
 import { getCookie } from "cookies-next";
 import HomeLeaderboardSection from "@/components/HomeLeaderboardSection";
-import { submitScore } from "@/utils/submitscore";
+// import { submitScore } from "@/utils/submitscore";
+
+
+
+
+
+
+
+
+
+
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -30,16 +40,16 @@ export default function HomePage() {
   const shouldShowVideo = isMobile || isGuest; // mobile → video, desktop guest → video
   const shouldShowGame = !isMobile && !isGuest; // desktop logged-in → game
 
-  // Submit score only if desktop + logged-in
-  useEffect(() => {
-    if (!shouldShowGame) return; // do nothing for mobile/guest
+  // // Submit score only if desktop + logged-in
+  // useEffect(() => {
+  //   if (!shouldShowGame) return; // do nothing for mobile/guest
 
-    const interval = setInterval(() => {
-      submitScore();
-    }, 2000); // check every 2s if Unity has payload
+  //   const interval = setInterval(() => {
+  //     submitScore();
+  //   }, 2000); // check every 2s if Unity has payload
 
-    return () => clearInterval(interval);
-  }, [shouldShowGame]);
+  //   return () => clearInterval(interval);
+  // }, [shouldShowGame]);
 
   // Define getUID only if logged in AND desktop
   useEffect(() => {
@@ -77,6 +87,35 @@ export default function HomePage() {
 }, [shouldShowGame, isLoggedIn]);
 
 
+useEffect(() => {
+  // Listen to messages from iframe
+  const listener = (event: MessageEvent) => {
+    if (event.origin !== window.location.origin) return;
+
+    if (event.data.type === "score") {
+      const { gameName, score } = event.data;
+
+      const token = getCookie("authToken");
+      if (!token) return;
+
+      fetch("/api/submit-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ gameName, data: score }),
+      });
+    }
+  };
+
+  window.addEventListener("message", listener);
+  return () => window.removeEventListener("message", listener);
+}, []);
+
+
+
+
   return (
     <>
       {shouldShowVideo && (
@@ -93,9 +132,9 @@ export default function HomePage() {
       )}
 
       {shouldShowGame && (
-        <div className="w-full h-140 gi py-12">
+        <div className="w-360 h-270 gi py-12 ">
           <iframe
-            src="/gameglitch/topdown-web/index.html"
+            src="/gameglitch/GM/index.html"
             className="w-full h-full border-none"
             title="Topdown Game"
             allowFullScreen

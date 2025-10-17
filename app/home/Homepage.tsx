@@ -20,12 +20,16 @@ export default function HomePage() {
 
   // Get guest / logged-in state safely
   useEffect(() => {
-  const guestCookie = getCookie("guestMode");
-  const token = getCookie("authToken");
+  const guestCookie = getCookie("guestMode"); // "true" | "false" | undefined
+  const token = getCookie("authToken");       // string | undefined
 
-  setIsGuest(Boolean(guestCookie));
+  // Convert string to boolean properly
+  const guest = guestCookie === "true"; // only true if cookie is "true"
+  setIsGuest(guest);
+
   setIsLoggedIn(!!token);
 }, []);
+
 
 
   // Compute what to show
@@ -114,7 +118,7 @@ export default function HomePage() {
       {shouldShowGame && (
         <div className="w-360 h-200 gi py-0">
           <iframe
-            src="/gameglitch/Final/index.html"
+            src="/gameglitch/GM/index.html"
             className="w-full h-full border-none"
             title="Topdown Game"
             allowFullScreen

@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import admin from "@/lib/firebaseadmin";
 import prisma from "@/lib/prisma";
 
+
+const normalizeEmail = (email: string) => {
+  const [localPart, domain] = email.split("@");
+  return `${localPart.toUpperCase()}@${domain.toLowerCase()}`;
+};
+
 export async function POST(req: NextRequest) {
   try {
     // 🔒 Verify Firebase token
@@ -27,7 +33,9 @@ export async function POST(req: NextRequest) {
     }
 
     // 🏠 Find hostel_id via StudentHostels table
-    const studentHostel = await prisma.studentHostels.findUnique({ where: { email } });
+
+const normalizedEmail = normalizeEmail(email);    
+const studentHostel = await prisma.studentHostels.findUnique({ where: { email: normalizedEmail} });
 
     // 🧾 Insert new user into DB
     await prisma.user.create({

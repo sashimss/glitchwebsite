@@ -36,7 +36,7 @@ export default function Footer() {
 
         <div className="w-full md:w-1/3 mb-4 md:mb-0 text-right">
           <p className="uppercase text-1.5xl font-bold text-zinc-500">Call Now</p>
-          <p className="text-white font-semibold text-base">0123456789</p>
+          <p className="text-white font-semibold text-base">98734 50819</p>
         </div>
       </div>
 

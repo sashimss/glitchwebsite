@@ -132,7 +132,7 @@ useEffect(() => {
       )}
 
       {shouldShowGame && (
-        <div className="w-360 h-270 gi py-12 ">
+        <div className="w-360 h-200 gi py-0 ">
           <iframe
             src="/gameglitch/GM/index.html"
             className="w-full h-full border-none"
@@ -180,7 +180,7 @@ useEffect(() => {
       <HomeLeaderboardSection />
 
       {/* Video image section */}
-      <div className="w-full h-[90vh] relative overflow-hidden">
+      {/* <div className="w-full h-[90vh] relative overflow-hidden">
         <img
           src="/homepage-videoimage.png"
           alt="Gaming Setup"
@@ -191,7 +191,7 @@ useEffect(() => {
         >
           <FaPlay className="w-8 h-8 text-black" />
         </button>
-      </div>
+      </div> */}
     </>
   );
 }

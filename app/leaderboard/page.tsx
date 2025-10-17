@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Trophy, Medal, Zap, Users, Crown } from "lucide-react";
+import { Trophy, Medal, Zap, Users, Crown, Star } from "lucide-react";
+import { getCookie } from "cookies-next";
 
 interface HostelScore {
   rank: number;
@@ -14,21 +15,60 @@ interface HostelScore {
 
 interface Player {
   rank: number;
+  uid?: string;
   name: string;
   hostel_name: string;
   score: number;
 }
 
+interface UserGameStats {
+  game_id: number;
+  game_name: string;
+  score: number;
+  rank: number;
+  in_top_20: boolean;
+}
+
+interface UserStats {
+  uid: string;
+  name: string;
+  hostel_id: number | null;
+  hostel_name: string;
+  game: UserGameStats;
+}
+
 const LeaderboardPage = () => {
-  const [activeTab, setActiveTab] = useState<"overall" | "games" | "players">(
-    "overall"
-  );
+  const [activeTab, setActiveTab] = useState<"overall" | "games" | "players">("overall");
   const [selectedGame, setSelectedGame] = useState(1);
   const [overallData, setOverallData] = useState<HostelScore[]>([]);
   const [gameData, setGameData] = useState<HostelScore[]>([]);
   const [playerData, setPlayerData] = useState<Player[]>([]);
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const barsRef = useRef<HTMLDivElement>(null);
+
+  // Check authentication
+  useEffect(() => {
+    const token = getCookie("authToken");
+    const uid = getCookie("uid");
+    setIsAuthenticated(!!token && !!uid);
+  }, []);
+
+  // Fetch user stats when authenticated
+  const fetchUserStats = async () => {
+    if (!isAuthenticated) return;
+    
+    try {
+      const res = await fetch("/api/user/stats"+`/${selectedGame}`);
+      if (res.ok) {
+        const data = await res.json();
+        setUserStats(data);
+      }
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+    }
+  };
 
   const fetchOverallLeaderboard = async () => {
     setLoading(true);
@@ -60,6 +100,11 @@ const LeaderboardPage = () => {
       const res = await fetch(`/api/leaderboard/players/${gameId}`);
       const data = await res.json();
       setPlayerData(data.leaderboard || []);
+      
+      // Fetch user stats when players tab is active
+      if (isAuthenticated) {
+        await fetchUserStats();
+      }
     } catch (error) {
       console.error("Error fetching player leaderboard:", error);
     }
@@ -96,6 +141,62 @@ const LeaderboardPage = () => {
     if (rank === 2) return <Medal className="w-6 h-6 text-gray-300" />;
     if (rank === 3) return <Medal className="w-6 h-6 text-orange-400" />;
     return <Trophy className="w-5 h-5 text-[var(--primary)]" />;
+  };
+
+  // Check if current user is in top 20 for selected game
+  const isUserInTop20 = () => {
+    if (!userStats || !isAuthenticated) return false;;
+    return userStats.game?.in_top_20 || false;
+  };
+
+ 
+  // Render user stats card
+  const renderUserStatsCard = (isInList: boolean = false) => {
+    const gameStats = userStats?.game;
+    if (!gameStats) return null;
+
+    return (
+      <div
+        className={`relative bg-gradient-to-br from-amber-900/30 via-yellow-900/20 to-amber-900/30 backdrop-blur-sm rounded-lg p-4 border-2 ${
+          isInList ? 'border-yellow-500' : 'border-amber-500'
+        } transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/50 user-stats-card`}
+      >
+        {/* Special glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-yellow-500/0 rounded-lg animate-pulse-slow"></div>
+        
+        {/* Your Position Badge */}
+        <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-3 py-1 rounded-full font-bold text-xs flex items-center gap-1 shadow-lg animate-bounce-slow">
+          <Star className="w-3 h-3 fill-current" />
+          YOUR POSITION
+        </div>
+
+        <div className="relative z-10 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(gameStats.rank)} flex items-center justify-center font-bold shadow-lg shadow-yellow-500/50`}>
+              {gameStats.rank}
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-yellow-300 flex items-center gap-2">
+                {userStats.name}
+                <span className="text-xs bg-yellow-500/20 px-2 py-0.5 rounded-full border border-yellow-500/50">YOU</span>
+              </h3>
+              <p className="text-sm text-gray-300">{userStats.hostel_name}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-yellow-400 glow-text">
+              {gameStats.score.toLocaleString()}
+            </p>
+            {gameStats.in_top_20 && (
+              <p className="text-xs text-yellow-300 font-semibold mt-1 flex items-center justify-end gap-1">
+                <Trophy className="w-3 h-3" />
+                TOP 20
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -226,14 +327,51 @@ const LeaderboardPage = () => {
               </div>
             )}
 
-            {/* Game/Player Sections */}
-            {(activeTab === "games" || activeTab === "players") && (
+            {/* Game Hostels */}
+            {activeTab === "games" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2 md:px-0 max-h-[600px] overflow-y-auto custom-scrollbar">
-                {(activeTab === "games" ? gameData : playerData).map(
-                  (item: any, index: number) => (
+                {gameData.map((item: any) => (
+                  <div
+                    key={item.hostel_id}
+                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-[var(--primary)] transition-all duration-300 flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankColor(
+                          item.rank
+                        )} flex items-center justify-center font-bold`}
+                      >
+                        {item.rank}
+                      </div>
+                      <h3 className="text-lg font-bold">{item.hostel_name}</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-purple-400">
+                      {item.total_score.toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Top Players */}
+            {activeTab === "players" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2 md:px-0 max-h-[600px] overflow-y-auto custom-scrollbar">
+                {playerData.map((item: any) => {
+                  // Check if this is the current user
+                  const isCurrentUser = isAuthenticated && userStats && item.uid === userStats.uid;
+                  
+                  if (isCurrentUser) {
+                    return (
+                      <div key={item.rank} className="sm:col-span-2">
+                        {renderUserStatsCard(true)}
+                      </div>
+                    );
+                  }
+
+                  return (
                     <div
-                      key={item.rank || index}
-                      className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-[var(--primary)] transition-all duration-300 flex items-center justify-between"
+                      key={item.rank}
+                      className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700 hover:border-green-400 transition-all duration-300 flex items-center justify-between"
                     >
                       <div className="flex items-center gap-4">
                         <div
@@ -244,31 +382,29 @@ const LeaderboardPage = () => {
                           {item.rank}
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold">
-                            {activeTab === "games"
-                              ? item.hostel_name
-                              : item.name}
-                          </h3>
-                          {activeTab === "players" && (
-                            <p className="text-sm text-gray-400">
-                              {item.hostel_name}
-                            </p>
-                          )}
+                          <h3 className="text-lg font-bold">{item.name}</h3>
+                          <p className="text-sm text-gray-400">{item.hostel_name}</p>
                         </div>
                       </div>
-                      <p
-                        className={`text-2xl font-bold ${
-                          activeTab === "games"
-                            ? "text-purple-400"
-                            : "text-green-400"
-                        }`}
-                      >
-                        {activeTab === "games"
-                          ? item.total_score.toLocaleString()
-                          : item.score.toLocaleString()}
+                      <p className="text-2xl font-bold text-green-400">
+                        {item.score.toLocaleString()}
                       </p>
                     </div>
-                  )
+                  );
+                })}
+
+                {/* Show user stats at bottom if not in top 20 */}
+                {isAuthenticated && userStats && !isUserInTop20() && (
+                  <div className="sm:col-span-2 mt-4">
+                    <div className="text-center mb-3">
+                      <div className="inline-block bg-gray-800/50 px-4 py-2 rounded-full border border-gray-700">
+                        <span className="text-sm text-gray-400">───── </span>
+                        <span className="text-sm font-semibold text-yellow-400">Your Stats</span>
+                        <span className="text-sm text-gray-400"> ─────</span>
+                      </div>
+                    </div>
+                    {renderUserStatsCard(false)}
+                  </div>
                 )}
               </div>
             )}
@@ -287,9 +423,14 @@ const LeaderboardPage = () => {
           animation: pulse 2s ease-in-out infinite;
         }
 
+        .glow-text {
+          text-shadow: 0 0 10px rgba(250, 204, 21, 0.8),
+                       0 0 20px rgba(250, 204, 21, 0.5),
+                       0 0 30px rgba(250, 204, 21, 0.3);
+        }
+
         @keyframes pulse {
-          0%,
-          100% {
+          0%, 100% {
             opacity: 1;
             text-shadow: 0 0 8px var(--primary), 0 0 16px var(--primary),
               0 0 30px var(--primary);
@@ -298,6 +439,39 @@ const LeaderboardPage = () => {
             opacity: 0.9;
             text-shadow: 0 0 12px var(--primary), 0 0 24px var(--primary),
               0 0 36px var(--primary);
+          }
+        }
+
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.5; }
+        }
+
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
+
+        .animate-pulse-slow {
+          animation: pulse-slow 3s ease-in-out infinite;
+        }
+
+        .animate-bounce-slow {
+          animation: bounce-slow 2s ease-in-out infinite;
+        }
+
+        .user-stats-card {
+          animation: slide-up 0.5s ease-out;
+        }
+
+        @keyframes slide-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
 
